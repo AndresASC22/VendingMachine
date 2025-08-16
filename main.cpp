@@ -1,9 +1,8 @@
 #include"VendingMachine.h"
 
 int main() {
-   std::string OptionSelect = "";
    VendingMachineClass Machine1;
-   Machine1.displayInventory();
+   std::cout << Machine1.itemRemove(100) << std::endl;
 
    return 0;
 }
