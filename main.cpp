@@ -2,6 +2,8 @@
 
 int main() {
    std::string OptionSelect = "";
-   VendingMachineClass machine1;
-   machine1.getItems();
+   VendingMachineClass Machine1;
+   Machine1.displayInventory();
+
+   return 0;
 }
