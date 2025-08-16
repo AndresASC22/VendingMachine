@@ -35,4 +35,24 @@ public:
         }
         return false;
     }
+
+    int returnSize() {
+        return VendingMachine.size();
+    }
+
+    std::string returnName(int i) {
+        return VendingMachine.at(i).name;
+    }
+
+    float returnPrice(int i) {
+        return VendingMachine.at(i).price;
+    }
+
+    int returnQuantity(int i) {
+        return VendingMachine.at(i).quantity;
+    }
+
+    int returnCode(int i) {
+        return VendingMachine.at(i).code;
+    }
 };
