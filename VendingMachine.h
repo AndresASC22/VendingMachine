@@ -24,35 +24,28 @@ public:
         } {}
     
     // Item removal
-    bool itemRemove(int c){        
-        int selected = 0;
-        selected = c;
-        for (int i = 0; i < VendingMachine.size(); i++) {
-            if (selected == VendingMachine.at(i).code && VendingMachine.at(i).quantity > 0) {
-                VendingMachine.at(i).quantity -= 1;
-                return true;
-            } 
+    bool itemRemove(int code) {
+        for (size_t i = 0; i < VendingMachine.size(); i++) {
+            if (VendingMachine[i].code == code) {
+                if (VendingMachine[i].quantity > 0) {
+                    VendingMachine[i].quantity -= 1;
+                    return true;
+                } else {
+                    return false; // code is valid, but out of stock
+                }
+            }
         }
-        return false;
+        return false; // code not found
     }
 
-    int returnSize() {
-        return VendingMachine.size();
-    }
+    // A lot of return functions
+    int returnSize() const { return VendingMachine.size(); }
 
-    std::string returnName(int i) {
-        return VendingMachine.at(i).name;
-    }
+    std::string returnName(int i) const { return VendingMachine.at(i).name; }
 
-    float returnPrice(int i) {
-        return VendingMachine.at(i).price;
-    }
+    float returnPrice(int i) const { return VendingMachine.at(i).price; }
 
-    int returnQuantity(int i) {
-        return VendingMachine.at(i).quantity;
-    }
+    int returnQuantity(int i) const { return VendingMachine.at(i).quantity; }
 
-    int returnCode(int i) {
-        return VendingMachine.at(i).code;
-    }
+    int returnCode(int i) const { return VendingMachine.at(i).code; }
 };
