@@ -2,6 +2,7 @@
 #include<string>
 #include<iostream>
 #include<vector>
+#include<limits>
 
 // Vending Machine class
 class VendingMachineClass {
@@ -22,7 +23,16 @@ public:
             {"Jerky", 2.5, 5, 500},
             {"Candy Bar", 2.0, 5, 600}
         } {}
-    
+
+    bool isEmpty() const {
+        for (const auto& item : VendingMachine) {
+            if (item.quantity > 0) {
+                return false; // Found at least one item still in stock
+            }
+        }
+        return true; // Everything is sold out
+    }
+
     // Item removal
     bool itemRemove(int code) {
         for (size_t i = 0; i < VendingMachine.size(); i++) {
@@ -31,11 +41,11 @@ public:
                     VendingMachine[i].quantity -= 1;
                     return true;
                 } else {
-                    return false; // code is valid, but out of stock
+                    return false; // Code is valid, but out of stock
                 }
             }
         }
-        return false; // code not found
+        return false; // Code not found
     }
 
     // A lot of return functions

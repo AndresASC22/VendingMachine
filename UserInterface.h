@@ -8,19 +8,36 @@ void displayInventory(const VendingMachineClass& vm) {
 }
 
 void errorMessage(int c) {
-    std::cout << "Error: " << c << " is not a valid option." << std::endl;
+    std::cout << "Error: " << c << " is not a valid option. \n";
 }
 
 // Calls all the functions
 void selectItem(VendingMachineClass& vm) {
-    displayInventory(vm);
-    int choice;
-    std::cout << "Enter the number of the item you want: ";
-    std::cin >> choice;
+    while (true) {
+        if (vm.isEmpty()) {
+            std::cout << "The vending machine is sold out! Goodbye.\n";
+            break; // Exit loop if everything is gone
+        }
 
-    if (vm.itemRemove(choice)) {
         displayInventory(vm);
-    } else {
-        errorMessage(choice);
+
+        int choice;
+        std::cout << "Enter the number of the item you want, enter 0 to exit: ";
+        std::cin >> choice;
+
+        if (!std::cin) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+
+        if (choice == 0)
+            break;
+
+        if (vm.itemRemove(choice))
+            std::cout << "Item dispensed!\n";
+        else
+            errorMessage(choice);
     }
 }
