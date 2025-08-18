@@ -26,9 +26,8 @@ public:
 
     bool isEmpty() const {
         for (const auto& item : VendingMachine) {
-            if (item.quantity > 0) {
+            if (item.quantity > 0)
                 return false; // Found at least one item still in stock
-            }
         }
         return true; // Everything is sold out
     }

@@ -20,7 +20,6 @@ void selectItem(VendingMachineClass& vm) {
         }
 
         displayInventory(vm);
-
         int choice;
         std::cout << "Enter the number of the item you want, enter 0 to exit: ";
         std::cin >> choice;
@@ -34,7 +33,6 @@ void selectItem(VendingMachineClass& vm) {
 
         if (choice == 0)
             break;
-
         if (vm.itemRemove(choice))
             std::cout << "Item dispensed!\n";
         else
