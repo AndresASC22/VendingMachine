@@ -1,4 +1,5 @@
 #include "VendingMachine.h"
+#include<limits>
 
 void displayInventory(const VendingMachineClass& vm) {
     for (int i = 0; i < vm.returnSize(); i++) {
@@ -7,8 +8,8 @@ void displayInventory(const VendingMachineClass& vm) {
     }
 }
 
-void errorMessage(int c) {
-    std::cout << "Error: " << c << " is not a valid option. \n";
+void errorMessage(const std::string& msg) {
+    std::cout << "Error: " << msg << std::endl;
 }
 
 // Calls all the functions
@@ -27,15 +28,17 @@ void selectItem(VendingMachineClass& vm) {
         if (!std::cin) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Invalid input. Please enter a number.\n";
+            errorMessage("Invalid input. Please enter a number.");
             continue;
         }
 
-        if (choice == 0)
-            break;
-        if (vm.itemRemove(choice))
+        if (choice == 0) break;
+
+        if (vm.itemRemove(choice)) 
             std::cout << "Item dispensed!\n";
-        else
-            errorMessage(choice);
+        else if (vm.isSold(choice)) 
+            errorMessage("Item is sold out!");
+        else 
+            errorMessage(std::to_string(choice) + " is not a valid option.");   
     }
 }
