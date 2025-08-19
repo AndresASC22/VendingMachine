@@ -12,6 +12,47 @@ void errorMessage(const std::string& msg) {
     std::cout << "Error: " << msg << std::endl;
 }
 
+void refillMode(VendingMachineClass& vm) {
+    while (true) {
+        std::cout << "\n--- Refill Mode ---\n";
+        for (int i = 0; i < vm.returnSize(); i++) {
+            std::cout << i + 1 << ". " << vm.returnName(i) 
+                      << " (Current: " << vm.returnQuantity(i) << ")\n";
+        }
+        std::cout << "Enter item number to refill (0 to exit): ";
+        
+        int choice;
+        std::cin >> choice;
+
+        if (!std::cin) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input, try again.\n";
+            continue;
+        }
+
+        if (choice == 0) break;
+
+        if (choice < 1 || choice > vm.returnSize()) {
+            std::cout << "Invalid item number.\n";
+            continue;
+        }
+
+        int amount;
+        std::cout << "Enter amount to add: ";
+        std::cin >> amount;
+
+        if (amount <= 0) {
+            std::cout << "Amount must be positive.\n";
+            continue;
+        }
+
+        vm.refillItem(choice - 1, amount);
+        std::cout << "Refilled " << vm.returnName(choice - 1) 
+                  << " by " << amount << " units.\n";
+    }
+}
+
 // Calls all the functions
 void selectItem(VendingMachineClass& vm) {
     while (true) {
@@ -22,7 +63,7 @@ void selectItem(VendingMachineClass& vm) {
 
         displayInventory(vm);
         int choice;
-        std::cout << "Enter the number of the item you want, enter 0 to exit: ";
+        std::cout << "\nEnter the number of the item you want, enter 0 to exit: ";
         std::cin >> choice;
 
         if (!std::cin) {
@@ -34,6 +75,10 @@ void selectItem(VendingMachineClass& vm) {
 
         if (choice == 0) break;
 
+        if (choice == -1) {
+            refillMode(vm);
+            continue; // return to normal menu after refill
+        }
         if (vm.itemRemove(choice)) 
             std::cout << "Item dispensed!\n";
         else if (vm.isSold(choice)) 
