@@ -48,6 +48,29 @@ public:
         return true;
     }
 
+    void refillItem(int index, int amount) {
+        if (index >= 0 && index < (int)VendingMachine.size() && amount > 0) {
+            int& currentQuantity = VendingMachine[index].quantity;
+
+            if (currentQuantity == 5) {
+                std::cout << VendingMachine[index].name << " is already at max capacity (5).\n";
+                return;
+            }
+
+            if (currentQuantity + amount > 5) {
+                currentQuantity = 5;
+                std::cout << VendingMachine[index].name 
+                        << " refilled to max capacity (5).\n";
+            } else {
+                currentQuantity += amount;
+                std::cout << VendingMachine[index].name 
+                    << " refilled to " << currentQuantity << ".\n";
+            }
+        } else {
+            std::cout << "Invalid refill request.\n";
+        }
+    }
+
     // Optional: helper to see if the machine is empty
     bool isEmpty() const {
         for (const auto& item : VendingMachine) {
