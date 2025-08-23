@@ -57,7 +57,12 @@ void refillMode(VendingMachineClass& vm) {
 void selectItem(VendingMachineClass& vm) {
     while (true) {
         if (vm.isEmpty()) {
-            std::cout << "The vending machine is sold out! Goodbye.\n";
+            std::cout << "The vending machine is sold out! Enter 'refill' to restock.\n";
+            std::string command;
+            std::cin >> command;
+            if (command == "refill") {
+                refillMode(vm);
+            }
             break; // Exit loop if everything is gone
         }
 
