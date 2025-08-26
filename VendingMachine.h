@@ -15,12 +15,12 @@ class VendingMachineClass {
 public:
     VendingMachineClass()
         : VendingMachine{ // Constructor here
-            {"Chips", 1.0, 5, 100},
-            {"Soda", 1.75, 5, 200},
-            {"Cookies", 1.5, 5, 300},
-            {"Water", 1.5, 5, 400},
-            {"Jerky", 2.5, 5, 500},
-            {"Candy Bar", 2.0, 5, 600}
+            {"Chips", 1.0, 1, 100},
+            {"Soda", 1.75, 0, 200},
+            {"Cookies", 1.5, 0, 300},
+            {"Water", 1.5, 0, 400},
+            {"Jerky", 2.5, 0, 500},
+            {"Candy Bar", 2.0, 0, 600}
         } {}
 
     // Item removal
@@ -38,6 +38,24 @@ public:
         return false;
     }
 
+    // Check if code is valid
+    bool isCodeValid(int code) {
+        return getIndexByCode(code) != -1;
+    }
+
+    float manageMoney(float& money, int& code) {
+        int index = getIndexByCode(code);
+        if (money == VendingMachine[index].price) {
+            itemRemove(code);
+            return 0;  // Exact amount received
+        } else if (money > VendingMachine[index].price) {
+            money -= VendingMachine[index].price;
+            return money;
+        } else {
+            return -1; // Insufficient funds
+        }
+    }
+
     // Check if item is sold out by code
     bool isSold(int code) const {
         for (const auto& item : VendingMachine) {
@@ -46,6 +64,15 @@ public:
             }
         }
         return true;
+    }
+
+    int getIndexByCode(int code) {
+        for (int i = 0; i < (int)VendingMachine.size(); i++) {
+            if (VendingMachine[i].code == code) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     void refillItem(int index, int amount) {
@@ -71,7 +98,7 @@ public:
         }
     }
 
-    // Optional: helper to see if the machine is empty
+    // Helper to see if the machine is empty
     bool isEmpty() const {
         for (const auto& item : VendingMachine) {
             if (item.quantity > 0) return false;
