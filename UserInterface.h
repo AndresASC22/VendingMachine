@@ -53,11 +53,35 @@ void refillMode(VendingMachineClass& vm) {
     }
 }
 
+float insertCash(int index, const VendingMachineClass& vm) {
+    float money;
+    float price = vm.returnPrice(index);
+    while (true) {
+        std::cout << "Insert $" << price << ": ";
+        std::cin >> money;
+
+        if (std::cin.fail() || money <= 0) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please enter a positive number.\n";
+        } else {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return money;
+        }
+    }
+}
+
 // Calls all the functions
 void selectItem(VendingMachineClass& vm) {
     while (true) {
         if (vm.isEmpty()) {
-            std::cout << "The vending machine is sold out! Goodbye.\n";
+            std::cout << "The vending machine is sold out! Enter 'refill' to restock.\n";
+            std::string command;
+            std::cin >> command;
+            if (command == "refill") {
+                refillMode(vm);
+                continue;
+            }
             break; // Exit loop if everything is gone
         }
 
@@ -74,16 +98,38 @@ void selectItem(VendingMachineClass& vm) {
         }
 
         if (choice == 0) break;
-
+        
         if (choice == -1) {
             refillMode(vm);
             continue; // return to normal menu after refill
         }
-        if (vm.itemRemove(choice)) 
-            std::cout << "Item dispensed!\n";
-        else if (vm.isSold(choice)) 
-            errorMessage("Item is sold out!");
-        else 
-            errorMessage(std::to_string(choice) + " is not a valid option.");   
+        
+        if (vm.isSold(choice)) {
+            std::cout << "Item is sold out!\n";
+        }
+
+        if (vm.isCodeValid(choice) && !vm.isSold(choice)) {
+            // Proceed with item selection
+            int index = vm.getIndexByCode(choice);
+            while (true) { // Loop for inserting cash
+                float money = insertCash(index, vm);
+                if (money > 0) {
+                    float change = vm.manageMoney(money, choice);
+                    if (change == 0) {
+                        vm.itemRemove(choice);
+                        std::cout << "Item dispensed!\n";
+                        break;
+                    } else if (change > 0) {
+                        vm.itemRemove(choice);
+                        std::cout << "Item dispensed! Your change is: $" << change << "\n"; 
+                        break;
+                    }  else if (change < vm.returnPrice(index)) {
+                        std::cout << "Insufficient funds. Please insert more money.\n";
+                    }
+                } else {
+                    errorMessage("Insufficient funds.");
+                }
+            }
+        }
     }
 }
