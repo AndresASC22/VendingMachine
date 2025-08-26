@@ -15,12 +15,12 @@ class VendingMachineClass {
 public:
     VendingMachineClass()
         : VendingMachine{ // Constructor here
-            {"Chips", 1.0, 1, 100},
-            {"Soda", 1.75, 0, 200},
-            {"Cookies", 1.5, 0, 300},
-            {"Water", 1.5, 0, 400},
-            {"Jerky", 2.5, 0, 500},
-            {"Candy Bar", 2.0, 0, 600}
+            {"Chips", 1.0, 5, 100},
+            {"Soda", 1.75, 5, 200},
+            {"Cookies", 1.5, 5, 300},
+            {"Water", 1.5, 5, 400},
+            {"Jerky", 2.5, 5, 500},
+            {"Candy Bar", 2.0, 5, 600}
         } {}
 
     // Item removal
