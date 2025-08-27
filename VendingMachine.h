@@ -42,11 +42,10 @@ public:
     bool isCodeValid(int code) {
         return getIndexByCode(code) != -1;
     }
-
+    
     float manageMoney(float& money, int& code) {
         int index = getIndexByCode(code);
         if (money == VendingMachine[index].price) {
-            itemRemove(code);
             return 0;  // Exact amount received
         } else if (money > VendingMachine[index].price) {
             money -= VendingMachine[index].price;
