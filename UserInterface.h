@@ -12,6 +12,12 @@ void errorMessage(const std::string& msg) {
     std::cout << "Error: " << msg << std::endl;
 }
 
+void handleInvalidInput() {
+    std::cin.clear(); // Clear error flags
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
+    errorMessage("Invalid input. Please enter a number.");
+}
+
 void refillMode(VendingMachineClass& vm) {
     while (true) {
         std::cout << "\n--- Refill Mode ---\n";
@@ -25,9 +31,7 @@ void refillMode(VendingMachineClass& vm) {
         std::cin >> choice;
 
         if (!std::cin) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Invalid input, try again.\n";
+            handleInvalidInput();
             continue;
         }
 
@@ -60,9 +64,9 @@ float insertCash(int index, const VendingMachineClass& vm) {
         std::cout << "Insert $" << price << ": ";
         std::cin >> money;
 
-        if (std::cin.fail() || money <= 0) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (std::cin.fail()) {
+            handleInvalidInput();
+        } else if (money <= 0) {
             std::cout << "Invalid input. Please enter a positive number.\n";
         } else {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -91,9 +95,7 @@ void selectItem(VendingMachineClass& vm) {
         std::cin >> choice;
 
         if (!std::cin) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            errorMessage("Invalid input. Please enter a number.");
+            handleInvalidInput();
             continue;
         }
 
@@ -103,8 +105,9 @@ void selectItem(VendingMachineClass& vm) {
             refillMode(vm);
             continue; // return to normal menu after refill
         }
-        
-        if (vm.isSold(choice)) {
+
+        // Called when item is sold out
+        if (vm.isSold(choice) && vm.isCodeValid(choice)) {
             std::cout << "Item is sold out!\n";
         }
 
@@ -126,8 +129,6 @@ void selectItem(VendingMachineClass& vm) {
                     }  else if (change < vm.returnPrice(index)) {
                         std::cout << "Insufficient funds. Please insert more money.\n";
                     }
-                } else {
-                    errorMessage("Insufficient funds.");
                 }
             }
         }
