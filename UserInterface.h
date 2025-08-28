@@ -111,26 +111,22 @@ void selectItem(VendingMachineClass& vm) {
             std::cout << "Item is sold out!\n";
         }
 
+        // Called when choice is valid
         if (vm.isCodeValid(choice) && !vm.isSold(choice)) {
             // Proceed with item selection
             int index = vm.getIndexByCode(choice);
-            while (true) { // Loop for inserting cash
-                float money = insertCash(index, vm);
-                if (money > 0) {
-                    float change = vm.manageMoney(money, choice);
-                    if (change == 0) {
-                        vm.itemRemove(choice);
-                        std::cout << "Item dispensed!\n";
-                        break;
-                    } else if (change > 0) {
-                        vm.itemRemove(choice);
-                        std::cout << "Item dispensed! Your change is: $" << change << "\n"; 
-                        break;
-                    }  else if (change < vm.returnPrice(index)) {
-                        std::cout << "Insufficient funds. Please insert more money.\n";
-                    }
-                }
-            }
+
+            float money = insertCash(index, vm);
+            float change = vm.manageMoney(money, choice);
+            if (change == 0) {
+                vm.itemRemove(choice);
+                std::cout << "Item dispensed!\n";
+            } else if (change > 0) {
+                vm.itemRemove(choice);
+                std::cout << "Item dispensed! Your change is: $" << change << "\n"; 
+            }  else if (change < vm.returnPrice(index)) {
+                std::cout << "Insufficient funds. Please insert more money.\n";
+            } 
         }
     }
 }
