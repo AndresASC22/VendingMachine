@@ -25,14 +25,11 @@ public:
 
     // Item removal
     bool itemRemove(int code) {
-        for (auto& item : VendingMachine) {
-            if (item.code == code) {
-                if (item.quantity > 0) {
-                    item.quantity -= 1;
-                    return true;
-                } else {
-                    return false;
-                }
+        int item = getIndexByCode(code);
+        if (item != -1) {
+            if (VendingMachine[item].quantity > 0) {
+                VendingMachine[item].quantity -= 1;
+                return true;
             }
         }
         return false;
@@ -45,14 +42,7 @@ public:
     
     float manageMoney(float& money, int& code) {
         int index = getIndexByCode(code);
-        if (money == VendingMachine[index].price) {
-            return 0;  // Exact amount received
-        } else if (money > VendingMachine[index].price) {
-            money -= VendingMachine[index].price;
-            return money;
-        } else {
-            return -1; // Insufficient funds
-        }
+        return money -= VendingMachine[index].price; // Not enough money
     }
 
     // Check if item is sold out by code
