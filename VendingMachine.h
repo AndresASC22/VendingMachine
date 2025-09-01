@@ -56,6 +56,7 @@ public:
     
     float manageMoney(float& money, int& code) {
         int index = getIndexByCode(code);
+        if (index == -1) return money;
         return money -= VendingMachine[index].price;
     }
 
