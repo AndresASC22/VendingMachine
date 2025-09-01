@@ -5,25 +5,39 @@
 
 // Vending Machine class
 class VendingMachineClass {
+    static constexpr int MAX_CAPACITY = 5;
+    static constexpr int CODE_START = 100;
+    static constexpr int CODE_INCREMENT = 100;
+
     struct Item { // Struct to give items a name, value and quantity;
         std::string name;
         float price;
         int quantity;
         const int code;
     };
+
     std::vector<Item> VendingMachine; // Vector to keep count of Item
 public:
-    VendingMachineClass()
-        : VendingMachine{ // Constructor here
-            {"Chips", 1.0, 5, 100},
-            {"Soda", 1.75, 5, 200},
-            {"Cookies", 1.5, 5, 300},
-            {"Water", 1.5, 5, 400},
-            {"Jerky", 2.5, 5, 500},
-            {"Candy Bar", 2.0, 5, 600}
-        } {}
+    VendingMachineClass() {
+        std::vector<std::pair<std::string, float>> defaults = {
+            {"Chips", 1.0},
+            {"Soda", 1.75},
+            {"Cookies", 1.5},
+            {"Water", 1.5},
+            {"Jerky", 2.5},
+            {"Candy Bar", 2.0}
+        };
 
-    // Item removal
+        for (size_t i = 0; i < defaults.size(); i++) {
+            VendingMachine.push_back({
+                defaults[i].first,   // name
+                defaults[i].second,  // price
+                MAX_CAPACITY,        // quantity
+                CODE_START + (int)i * CODE_INCREMENT // auto code
+            });
+        }
+    }
+
     bool itemRemove(int code) {
         int item = getIndexByCode(code);
         if (item != -1) {
@@ -42,24 +56,19 @@ public:
     
     float manageMoney(float& money, int& code) {
         int index = getIndexByCode(code);
-        return money -= VendingMachine[index].price; // Not enough money
+        return money -= VendingMachine[index].price;
     }
 
     // Check if item is sold out by code
     bool isSold(int code) const {
-        for (const auto& item : VendingMachine) {
-            if (item.code == code) {
-                return item.quantity == 0; // true if sold out
-            }
-        }
-        return true;
+        int index = getIndexByCode(code);
+        if (index == -1) return true;
+        return VendingMachine[index].quantity == 0;
     }
 
-    int getIndexByCode(int code) {
+    int getIndexByCode(int code) const {
         for (int i = 0; i < (int)VendingMachine.size(); i++) {
-            if (VendingMachine[i].code == code) {
-                return i;
-            }
+            if (VendingMachine[i].code == code) return i;
         }
         return -1;
     }
@@ -87,7 +96,6 @@ public:
         }
     }
 
-    // Helper to see if the machine is empty
     bool isEmpty() const {
         for (const auto& item : VendingMachine) {
             if (item.quantity > 0) return false;
