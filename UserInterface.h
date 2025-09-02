@@ -103,30 +103,27 @@ void selectItem(VendingMachineClass& vm) {
         
         if (choice == -1) {
             refillMode(vm);
-            continue; // return to normal menu after refill
+            continue;
         }
 
-        // Called when item is sold out
-        if (vm.isSold(choice) && vm.isCodeValid(choice)) {
+        if (!vm.isCodeValid(choice)) {
+            std::cout << "Invalid item code.\n";
+        } else if (vm.isSold(choice)) {
             std::cout << "Item is sold out!\n";
-        }
-
-        // Called when choice is valid
-        if (vm.isCodeValid(choice) && !vm.isSold(choice)) {
-            // Proceed with item selection
+        } else { // Valid and not sold out case 
             int index = vm.getIndexByCode(choice);
-
             float money = insertCash(index, vm);
             float change = vm.manageMoney(money, choice);
+
             if (change == 0) {
                 vm.itemRemove(choice);
                 std::cout << "Item dispensed!\n";
             } else if (change > 0) {
                 vm.itemRemove(choice);
                 std::cout << "Item dispensed! Your change is: $" << change << "\n"; 
-            }  else if (change < vm.returnPrice(index)) {
+            } else {
                 std::cout << "Insufficient funds. Please insert more money.\n";
-            } 
+            }
         }
     }
 }
